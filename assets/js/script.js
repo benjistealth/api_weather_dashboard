@@ -11,26 +11,27 @@ searchButton = $("#search-button");
 // initial API query to get the lat lon on page load
 var queryURL_1 = "https://openweathermap.org/api/geocoding-api"
 // define the API query components for call deux
-var queryURL_2 = `https://api.openweathermap.org/data/2.5/forecast?lat=` + lat + `&lon=` + `&appid=` + API_Key;
+var queryURL = "https://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + "&appid=" + API_Key;
 var API_Key = "4fdb63abdc22d25a9f11e91d3ffc862a";
 var lat = lat;
 var lon = lon;
 
 
 // run this when the page loads
-$(document).ready(function () {
-    // from w3 schools
-    // get the current location of the user to display on page load - if they accept pop up
-    // if they dont accept, just wait for search button and do that instead
-    function getUserLocation() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition();
-            lat = position.coords.latitude;
-            lon = position.coords.longitude;
-            var queryURL = queryURL_2
-        }
+// $(document).ready(function () {
+//     // from w3 schools
+//     // get the current location of the user to display on page load - if they accept pop up
+//     // if they dont accept, just wait for search button and do that instead
+//     function getUserLocation() {
+//         if (navigator.geolocation) {
+//             navigator.geolocation.getCurrentPosition();
+//             lat = position.coords.latitude;
+//             lon = position.coords.longitude;
+//             var queryURL = queryURL_2
+//             Alert("queryURL: " + queryURL);
+//         }
         
-    }
+//     }
 
     // listen for the button click event
     // then go look up the lat lon with the city name
@@ -38,19 +39,22 @@ $(document).ready(function () {
         alert("Did someone click SEARCH ?? ")
 
         // grab user search term to build query
-        // 
+        // fake it to test query
+        lat = 50.23;
+        lon = -5.26;
 
         // write the ajax call to get the lat lon
         $.ajax({
-            url: queryURL,
+            url: queryURL_1,
             method: "GET"
         }).then(weatherPayload);
 
-
-
+        Alert("lat: " + queryURL);
+        Alert("lon: " + queryURL);
+        Alert("queryURL: " + queryURL_1);
 
         // test the ajax reponse in console
-        console.log(weatherPayload);
+        console.log("weather payload : " + weatherPayload);
     });
-})
+// })
 
