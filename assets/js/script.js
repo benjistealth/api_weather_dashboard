@@ -6,55 +6,102 @@
 // 
 
 // Grab divs from html
-searchBoxText = $("#search-input").val();
-searchButton = $("#search-button");
+today = $("#today");
+searchButton = $(".search-button");
+forecastEl = $("#forecast");
+
 // initial API query to get the lat lon on page load
 var queryURL_1 = "https://openweathermap.org/api/geocoding-api"
 // define the API query components for call deux
-var queryURL = "https://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + "&appid=" + API_Key;
-var API_Key = "4fdb63abdc22d25a9f11e91d3ffc862a";
-var lat = lat;
-var lon = lon;
+var queryURL = "https://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + lon + "&appid=" + API_Key;
+var API_Key = "4fdb63abdc22d25a9f11e91d3ffc862a"; // my API key
+// Use London as start value 51.507359, -0.136439.
+var lat = 51.50;
+var lon = -0.13;
+var searchArr = [];
 
 
-// run this when the page loads
-// $(document).ready(function () {
-//     // from w3 schools
-//     // get the current location of the user to display on page load - if they accept pop up
-//     // if they dont accept, just wait for search button and do that instead
-//     function getUserLocation() {
-//         if (navigator.geolocation) {
-//             navigator.geolocation.getCurrentPosition();
-//             lat = position.coords.latitude;
-//             lon = position.coords.longitude;
-//             var queryURL = queryURL_2
-//             Alert("queryURL: " + queryURL);
-//         }
-        
-//     }
+searchButton.click(function (event) {
+    event.preventDefault();
+    // remove existing weather data if a new search is triggered
+    $(".five-day").remove();
+    searchBoxText = $("#search-input").val();
 
-    // listen for the button click event
-    // then go look up the lat lon with the city name
-    searchButton.on("click", function (event) {
-        alert("Did someone click SEARCH ?? ")
 
-        // grab user search term to build query
-        // fake it to test query
-        lat = 50.23;
-        lon = -5.26;
+    // grab user search term or default to London
+    if (searchBoxText) {
+        searchArr.push(searchBoxText);
+        localStorage.setItem("searches", searchArr);
+        getLatlon();
+        createSearchButtons(searchArr);
+        var weatherPayLoad = "https://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + lon + "&appid=" + API_Key;
+    } else {
+        // use London lat lon as default
+        var weatherPayLoad = "https://api.openweathermap.org/data/2.5/forecast?lat=51.50&lon=-0.13&appid=" + API_Key;
+        searchArr.push(searchBoxText);
+    }
+    // console.log(weatherPayLoad);
+    $.getJSON(weatherPayLoad, function (json) {
+        console.log("time :" + json.list[0].dt);
+        console.log("wind :" + json.list[0].wind.speed);
+        console.log("temp :" + (json.list[0].main.temp - 273.15).toFixed()); //kelvin temp
+        console.log("humidity : " + json.list[0].main.humidity);
 
-        // write the ajax call to get the lat lon
-        $.ajax({
-            url: queryURL_1,
-            method: "GET"
-        }).then(weatherPayload);
+        unixTime = json.list[0].dt;//unix time stamp to convert
+        var date = convertUNIX(unixTime);
+        console.log("date : " + date);
+        //format location and date
+        today.html(json.city.name + " " + date);
+        // add  icon from openweatherAPI
+        var todayimageDiv = $("<img>");
+        // use zero in the array as always first day
+        var todayimageLink = "http://openweathermap.org/img/w/" + json.list[0].weather[0].icon + ".png";
+        todayimageDiv.attr("src", todayimageLink);
+        today.append(todayimageDiv);
+        // creating weather element containers
+        var fiveDayDiv = $("<div>").addClass("five-day");
+        forecastEl.append(fiveDayDiv);
 
-        Alert("lat: " + queryURL);
-        Alert("lon: " + queryURL);
-        Alert("queryURL: " + queryURL_1);
 
-        // test the ajax reponse in console
-        console.log("weather payload : " + weatherPayload);
+        for (let i = 0; i < json.list.length; i = i + 8) {
+            // create a div for each day
+            var dayDiv = $("<div>").addClass("dayDiv");
+            // creating weather data
+            var icon = $("<img>");
+            var wind = $("<div>");
+            var temp = $("<div>");
+            var humidity = $("<div>");
+            var iconurl = "http://openweathermap.org/img/w/" + json.list[i].weather[0].icon + ".png";
+            temp.text("Temp: " + (json.list[i].main.temp - 273.15).toFixed()) + "9\xB0" + "C";
+            wind.text("Wind: " + json.list[i].wind.speed + " KPH");
+            humidity.text("humidity: " + json.list[i].main.humidity + " %");
+            icon.attr("src", iconurl);
+
+            // Adding elements to page        
+            fiveDayDiv.append(dayDiv);
+            dayDiv.append(date, icon, temp, wind, humidity);
+        }
     });
-// })
+})
 
+function convertUNIX(unixTime) {
+    const date = moment.unix(unixTime).format("DD/MM/YYYY");
+    return date;
+}
+
+function getLatlon() {
+    var latLonSearch = "http://api.openweathermap.org/geo/1.0/direct?q=" + searchBoxText + "&limit=1&appid=" + API_Key;
+    // need to handle failed search
+    if (latLonSearch) {
+        $.getJSON(latLonSearch, function (json) {
+            lat = json[0].lat;
+            lon = json[0].lon;
+            return;
+        })
+    }
+    return;
+}
+
+function createSearchButtons(searchArr) {
+
+}

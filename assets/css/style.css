@@ -8,3 +8,11 @@
     /* border-color: black, 1px; */
 }
 
+.five-day {
+ display: flex;
+ flex-direction: row;
+}
+
+.day {
+padding: 5vw;
+}
