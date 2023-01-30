@@ -6,6 +6,7 @@
 // 
 
 // Grab divs from html
+todayBox = $(".today-box");
 today = $("#today");
 searchButton = $(".search-button");
 forecastEl = $("#forecast");
@@ -25,6 +26,8 @@ searchButton.click(function (event) {
     event.preventDefault();
     // remove existing weather data if a new search is triggered
     $(".five-day").remove();
+    $(".five-day").remove();
+    // grab search input 
     searchBoxText = $("#search-input").val();
 
 
@@ -44,20 +47,30 @@ searchButton.click(function (event) {
     $.getJSON(weatherPayLoad, function (json) {
         console.log("time :" + json.list[0].dt);
         console.log("wind :" + json.list[0].wind.speed);
-        console.log("temp :" + (json.list[0].main.temp - 273.15).toFixed()); //kelvin temp
+        console.log("temp :" + (json.list[0].main.temp - 273.15).toFixed()); //kelvin temp adjustment 
         console.log("humidity : " + json.list[0].main.humidity);
 
         unixTime = json.list[0].dt;//unix time stamp to convert
         var date = convertUNIX(unixTime);
         console.log("date : " + date);
-        //format location and date
+        //format location and date for today data
         today.html(json.city.name + " " + date);
         // add  icon from openweatherAPI
         var todayimageDiv = $("<img>");
         // use zero in the array as always first day
         var todayimageLink = "http://openweathermap.org/img/w/" + json.list[0].weather[0].icon + ".png";
         todayimageDiv.attr("src", todayimageLink);
-        today.append(todayimageDiv);
+       
+        var todayTempEl = $("<div>");
+        var todayWindEl = $("<div>");
+        var todayHumEl = $("<div>");
+        // var todayTemp = ("Temp: " + json.list[0].main.temp - 273.15).toFixed() + " C";
+        todayTempEl.text("Temp: " + (json.list[0].main.temp - 273.15).toFixed());
+        todayWindEl.text("Wind: " + json.list[0].wind.speed + " KPH");
+        todayHumEl.text("Humidity: " + json.list[0].main.humidity + " %");
+        // todayTempEl.append();
+        today.append(todayimageDiv, todayTempEl, todayWindEl, todayHumEl);
+        
         // creating weather element containers
         var fiveDayDiv = $("<div>").addClass("five-day");
         forecastEl.append(fiveDayDiv);
@@ -74,7 +87,7 @@ searchButton.click(function (event) {
             var iconurl = "http://openweathermap.org/img/w/" + json.list[i].weather[0].icon + ".png";
             temp.text("Temp: " + (json.list[i].main.temp - 273.15).toFixed()) + "9\xB0" + "C";
             wind.text("Wind: " + json.list[i].wind.speed + " KPH");
-            humidity.text("humidity: " + json.list[i].main.humidity + " %");
+            humidity.text("Humidity: " + json.list[i].main.humidity + " %");
             icon.attr("src", iconurl);
 
             // Adding elements to page        
