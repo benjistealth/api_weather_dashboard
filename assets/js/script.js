@@ -28,7 +28,7 @@ searchButton.click(function (event) {
         today.append(todayBox);        
         // use zero in the list array as today is always first day
         var todayimageDiv = $("<img>");
-        var todayimageLink = "http://openweathermap.org/img/w/" + json.list[0].weather[0].icon + ".png";
+        var todayimageLink = "https://openweathermap.org/img/w/" + json.list[0].weather[0].icon + ".png";
         todayimageDiv.attr("src", todayimageLink);
         var todayDatePlace = $("<h2>");
         var todayTempEl = $("<div>");
@@ -56,7 +56,7 @@ searchButton.click(function (event) {
             var humidity = $("<div>");
             datetext = convertUNIX((json.list[i].dt));
             date.text(datetext);
-            var iconurl = "http://openweathermap.org/img/w/" + json.list[i].weather[0].icon + ".png";
+            var iconurl = "https://openweathermap.org/img/w/" + json.list[i].weather[0].icon + ".png";
             temp.text("Temp: " + (json.list[i].main.temp - 273.15).toFixed()) + "9\xB0" + "C";
             wind.text("Wind: " + json.list[i].wind.speed + " KPH");
             humidity.text("Humidity: " + json.list[i].main.humidity + " %");

@@ -2,10 +2,6 @@
     color: black;
 }
 
-header {
-    background-color: blue !important;
-}
-
 #search-button {
     color: black;
     font-weight: bold;
@@ -33,8 +29,8 @@ header {
     border: 1px, black;
 }
 
-#today-box {
-    border: 1px, black;
+#today-box img {
+    
 }
 
 .five-day {
