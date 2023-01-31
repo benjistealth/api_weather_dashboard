@@ -1,9 +1,3 @@
-// Use the [5 Day Weather Forecast](https://openweathermap.org/forecast5)
-// The base URL for your API calls should look like the following: 
-// `https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid={API key}`
-// take city and send of request to get lat lon and then request weather
-// initialise the page with the geolocal
-// 
 
 // Grab divs from html
 todayBox = $("<div>").addClass("today-box");
@@ -11,17 +5,7 @@ today = $("#today");
 searchButton = $(".search-button");
 forecastEl = $("#forecast");
 historyEl = $("#history");
-
-
-// initial API query to get the lat lon on page load
-// var queryURL_1 = "https://openweathermap.org/api/geocoding-api"
-// define the API query components for call deux
-// var queryURL = "https://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + lon + "&appid=" + API_Key;
 var API_Key = "4fdb63abdc22d25a9f11e91d3ffc862a"; // my API key
-// Use London as start value 51.507359, -0.136439.
-var lat = 51;
-var lon = -0.14;
-var searchArr = [];
 
 // user click event
 searchButton.click(function (event) {
@@ -29,30 +13,17 @@ searchButton.click(function (event) {
     // remove existing weather data if a new search is triggered
     $(".five-day").remove();
     $(".today-box").remove();
-    // rebuild today from history - with the buttons ?
-    // createSearchButtons();
-    // grab search input 
-    searchBoxText = $("#search-input").val();
-    // grab user search term or default to London
-    if (searchBoxText) {
-        getLatlon();
-        searchArr.push(searchBoxText);
-        localStorage.setItem("searches", JSON.stringify(searchArr));
-
-        createSearchButtons();
-        getLatlon();
-        var userWeatherQuery = "https://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + lon + "&appid=" + API_Key;
-
-    }
-    else {
-        searchBoxText = "london";
-        getLatlon();
-        // use London lat lon as default
-        var userWeatherQuery = "https://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + lon + "&appid=" + API_Key;
-        searchArr.push(searchBoxText);
-    }
+    
+    buildQuery();
+    createSearchButtons();
+    // alert("back to main trigger " + weatherQuery);
+    setTimeout(function () {
+        console.log("waiting..... ");
+      }, 800);
+    var userWeatherQuery = localStorage.getItem("weatherQuery");
+    console.log(userWeatherQuery);
+    // }
     $.getJSON(userWeatherQuery, function (json) {
-        getLatlon(searchBoxText);
         unixTime = json.list[0].dt;//unix time stamp to convert
         var todayDate = convertUNIX(unixTime);
         // create a box for today weather 
@@ -61,7 +32,7 @@ searchButton.click(function (event) {
         todayBox.html(json.city.name + " " + todayDate);
         // add  icon from openweatherAPI
         var todayimageDiv = $("<img>");
-        // use zero in the array as always first day
+        // use zero in the list array as always first day
         var todayimageLink = "http://openweathermap.org/img/w/" + json.list[0].weather[0].icon + ".png";
         todayimageDiv.attr("src", todayimageLink);
 
@@ -80,7 +51,7 @@ searchButton.click(function (event) {
 
         for (let i = 0; i < json.list.length; i = i + 8) {
             // create a div for each day
-            var dayDiv = $("<div>").addClass("dayDiv");
+            var dayDiv = $("<div>").addClass("day");
             // creating weather data
             var date = $("<div>");
             var icon = $("<img>");
@@ -107,30 +78,66 @@ function convertUNIX(unixTime) {
     return date;
 }
 
-function getLatlon() {
-    var latLonSearch = "http://api.openweathermap.org/geo/1.0/direct?q=" + searchBoxText + "&limit=1&appid=" + API_Key;
-    // need to handle failed search
-    if (latLonSearch) {
+function buildQuery() {
+    searchText = recallSave();
+    // alert("search_text: " + searchText);
+    var latLonSearch = "http://api.openweathermap.org/geo/1.0/direct?q=" + searchText + "&limit=1&appid=" + API_Key;
+    // need to handle failed search ideally
         $.getJSON(latLonSearch, function (json) {
-            lat = json[0].lat;
-            lon = json[0].lon;
+            var lat = json[0].lat;
+            var lon = json[0].lon;
+            console.log(lat + " " + lon);
+            var weatherQuery = "https://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + lon + "&appid=" + API_Key;
+            localStorage.setItem("weatherQuery", weatherQuery);
+            console.log(weatherQuery);
         })
-    }
 }
 
 function createSearchButtons() {
-    if (JSON.parse(localStorage.getItem("searches"))) { var searchArr = JSON.parse(localStorage.getItem("searches")); }
-    else { searchArr = [null]; }
-    if (searchArr) {
-        // remove any existing buttons
+    // if there is storage, build buttons from it
+    if (JSON.parse(localStorage.getItem("searches"))) {
+        var buttonArr = JSON.parse(localStorage.getItem("searches"));
+        // remove any existing buttons before rebuilding them
         $(".button-box").remove();
         // create a div to store buttons so that they can be removed easily
         var buttonbox = $("<div>").addClass("button-box");
         historyEl.append(buttonbox);
-        alert("recalled: " + searchArr);
-        for (let i = 0; i < searchArr.length; i++) {
-            var btn = $("<button>").text(searchArr[i]).addClass("btn button btn-secondary");
+        // alert("recalled: " + buttonArr);
+        for (let i = 0; i < buttonArr.length; i++) {
+            var btn = $("<button>").text(buttonArr[i]).addClass("btn button btn-secondary");
             buttonbox.append(btn);
         }
     }
+    else {
+        return;
+    }
+}
+
+function recallSave() {
+    // grab searchbox text
+    searchBoxText = $("#search-input").val();
+    // check something is present
+    if (searchBoxText) {
+        // if searchbox text exists but storage doesnt, create storage
+        if (JSON.parse(localStorage.getItem("searches")) == null) {
+            var searchArr = [searchBoxText];
+            localStorage.setItem("searches", JSON.stringify(searchArr));
+            // searchBoxText = "london";
+            // alert("recalledArr: " + recalledArr);
+        }
+        else {
+            // if search text exists and storage exists - add to existing storage
+            var recalledArr = JSON.parse(localStorage.getItem("searches"));
+            recalledArr.push(searchBoxText);
+            // alert("recallsave array to store" + recalledArr);
+            localStorage.setItem("searches", JSON.stringify(recalledArr));
+            // alert("recalledArr: " + recalledArr);
+            // set searchbox text to last item
+            searchBoxText = recalledArr[(recalledArr.length - 1)];
+            return searchBoxText;
+        }
+    }
+    searchBoxText = "london";
+    return searchBoxText;
+
 }

@@ -9,17 +9,35 @@ header {
 #search-button {
     color: black;
     font-weight: bold;
+    width: 20vw;
+    margin-left: 10px;
+    border-radius: 3px;
 }
 
-/* .btn-secondary {
-    background-color: brown;
-} */
+#search-input {
+    width: 20vw;
+    margin-left: 10px;
+}
+
+.button-box {
+    display: flex;
+    flex-direction: column;
+    padding: 5vw;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.btn-secondary {
+    width: 20vw;
+    text-align: center;
+    border: 1px, black;
+}
 
 .five-day {
- display: flex;
- flex-direction: row;
+    display: flex;
+    flex-direction: row;
 }
 
 .day {
-padding: 5vw;
+    padding: 1vw;
 }
