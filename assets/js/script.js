@@ -34,19 +34,18 @@ searchButton.click(function (event) {
     searchBoxText = $("#search-input").val();
     // grab user search term or default to London
     if (searchBoxText) {
-
-        getLatlon(searchBoxText);
+        getLatlon();
         searchArr.push(searchBoxText);
         localStorage.setItem("searches", JSON.stringify(searchArr));
 
         createSearchButtons();
-        getLatlon(searchBoxText);
+        getLatlon();
         var userWeatherQuery = "https://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + lon + "&appid=" + API_Key;
        
     }
     else {
         searchBoxText = "london";
-        getLatlon(searchBoxText);
+        getLatlon();
         // use London lat lon as default
         var userWeatherQuery = "https://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + lon + "&appid=" + API_Key;
         searchArr.push(searchBoxText);
@@ -107,7 +106,7 @@ function convertUNIX(unixTime) {
     return date;
 }
 
-function getLatlon(searchBoxText) {
+function getLatlon() {
     var latLonSearch = "http://api.openweathermap.org/geo/1.0/direct?q=" + searchBoxText + "&limit=1&appid=" + API_Key;
     // need to handle failed search
     if (latLonSearch) {
@@ -119,14 +118,14 @@ function getLatlon(searchBoxText) {
 }
 
 function createSearchButtons() {
-    if (JSON.parse(localStorage.getItem("searches"))) { var recalledAppts = JSON.parse(localStorage.getItem("searches")); }
+    if (JSON.parse(localStorage.getItem("searches"))) { var searchArr = JSON.parse(localStorage.getItem("searches")); }
     else { searchArr = [null]; }
     if (searchArr) {
         alert("recalled: " + searchArr);
-        var buttonbox = $("<button>").addClass("button-box");
+        var buttonbox = $("<div>").addClass("button-box ");
         historyEl.append(buttonbox);
         for (let i = 0; i < searchArr.length; i++) {
-            var btn = $("<button>").text(searchArr[i]).addClass("btn button button-secondary history-btn");
+            var btn = $("<button>").text(searchArr[i]).addClass("btn button btn-secondary history-btn");
             buttonbox.append(btn);
         }
     }
