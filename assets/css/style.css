@@ -40,7 +40,6 @@ header {
 .five-day {
     display: flex;
     flex-direction: row;
-    align-items: space-around;
 }
 
 .day {

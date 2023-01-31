@@ -13,16 +13,14 @@ searchButton.click(function (event) {
     // remove existing weather data if a new search is triggered
     $(".five-day").remove();
     $(".today-box").remove();
-    
     buildQuery();
     createSearchButtons();
     // wait for API call to complete before continue
     setTimeout(function () {
-        console.log("waiting..... ");
+        console.log("waiting.....");
       }, 800);
     var userWeatherQuery = localStorage.getItem("weatherQuery");
     console.log(userWeatherQuery);
-    // }
     $.getJSON(userWeatherQuery, function (json) {
         unixTime = json.list[0].dt;//unix time stamp to convert
         var todayDate = convertUNIX(unixTime);
@@ -33,7 +31,6 @@ searchButton.click(function (event) {
         var todayimageLink = "http://openweathermap.org/img/w/" + json.list[0].weather[0].icon + ".png";
         todayimageDiv.attr("src", todayimageLink);
         var todayDatePlace = $("<h2>");
-        
         var todayTempEl = $("<div>");
         var todayWindEl = $("<div>");
         var todayHumEl = $("<div>");
@@ -88,7 +85,7 @@ function buildQuery() {
             console.log(lat + " " + lon);
             var weatherQuery = "https://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + lon + "&appid=" + API_Key;
             localStorage.setItem("weatherQuery", weatherQuery);
-            console.log(weatherQuery);
+            // console.log(weatherQuery);
         })
 }
 
