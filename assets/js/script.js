@@ -29,30 +29,28 @@ searchButton.click(function (event) {
     $(".five-day").remove();
     $(".today-box").remove();
     // rebuild today from history - with the buttons ?
-    createSearchButtons(searchArr);
+    // createSearchButtons();
     // grab search input 
     searchBoxText = $("#search-input").val();
     // grab user search term or default to London
     if (searchBoxText) {
-        
+
         getLatlon(searchBoxText);
         searchArr.push(searchBoxText);
-        localStorage.setItem("searches", searchArr);
+        localStorage.setItem("searches", JSON.stringify(searchArr));
 
-        //createSearchButtons(searchArr);//todo
-
-        var userWeatherQuery = "https://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + lon + "&appid=" + API_Key;
+        createSearchButtons();
         getLatlon(searchBoxText);
+        var userWeatherQuery = "https://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + lon + "&appid=" + API_Key;
+       
     }
-    else
-    {
+    else {
         searchBoxText = "london";
         getLatlon(searchBoxText);
         // use London lat lon as default
         var userWeatherQuery = "https://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + lon + "&appid=" + API_Key;
         searchArr.push(searchBoxText);
     }
-    // console.log(weatherPayLoad);
     $.getJSON(userWeatherQuery, function (json) {
         getLatlon(searchBoxText);
         unixTime = json.list[0].dt;//unix time stamp to convert
@@ -120,11 +118,16 @@ function getLatlon(searchBoxText) {
     }
 }
 
-function createSearchButtons(searchArr) {
-    var buttonbox = $("<ol>").addClass("button-box");
-    historyEl.append(buttonbox);
-    for (let i = 0; i < searchArr.length; i++) {
-        var btn = $("<button>").text(searchArr[i]);
-        buttonbox.append(btn);
+function createSearchButtons() {
+    if (JSON.parse(localStorage.getItem("searches"))) { var recalledAppts = JSON.parse(localStorage.getItem("searches")); }
+    else { searchArr = [null]; }
+    if (searchArr) {
+        alert("recalled: " + searchArr);
+        var buttonbox = $("<button>").addClass("button-box");
+        historyEl.append(buttonbox);
+        for (let i = 0; i < searchArr.length; i++) {
+            var btn = $("<button>").text(searchArr[i]).addClass("btn button button-secondary history-btn");
+            buttonbox.append(btn);
+        }
     }
 }

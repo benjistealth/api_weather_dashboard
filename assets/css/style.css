@@ -9,7 +9,10 @@ header {
 #search-button {
     color: black;
     font-weight: bold;
-    /* border-color: black, 1px; */
+}
+
+.history-btn {
+    background-color: brown;
 }
 
 .five-day {
