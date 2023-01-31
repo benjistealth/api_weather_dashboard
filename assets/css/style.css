@@ -11,9 +11,9 @@ header {
     font-weight: bold;
 }
 
-.history-btn {
+/* .btn-secondary {
     background-color: brown;
-}
+} */
 
 .five-day {
  display: flex;

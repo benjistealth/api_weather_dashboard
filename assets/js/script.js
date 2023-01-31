@@ -12,6 +12,7 @@ searchButton = $(".search-button");
 forecastEl = $("#forecast");
 historyEl = $("#history");
 
+
 // initial API query to get the lat lon on page load
 // var queryURL_1 = "https://openweathermap.org/api/geocoding-api"
 // define the API query components for call deux
@@ -41,7 +42,7 @@ searchButton.click(function (event) {
         createSearchButtons();
         getLatlon();
         var userWeatherQuery = "https://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + lon + "&appid=" + API_Key;
-       
+
     }
     else {
         searchBoxText = "london";
@@ -121,11 +122,14 @@ function createSearchButtons() {
     if (JSON.parse(localStorage.getItem("searches"))) { var searchArr = JSON.parse(localStorage.getItem("searches")); }
     else { searchArr = [null]; }
     if (searchArr) {
-        alert("recalled: " + searchArr);
-        var buttonbox = $("<div>").addClass("button-box ");
+        // remove any existing buttons
+        $(".button-box").remove();
+        // create a div to store buttons so that they can be removed easily
+        var buttonbox = $("<div>").addClass("button-box");
         historyEl.append(buttonbox);
+        alert("recalled: " + searchArr);
         for (let i = 0; i < searchArr.length; i++) {
-            var btn = $("<button>").text(searchArr[i]).addClass("btn button btn-secondary history-btn");
+            var btn = $("<button>").text(searchArr[i]).addClass("btn button btn-secondary");
             buttonbox.append(btn);
         }
     }
