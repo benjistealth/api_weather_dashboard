@@ -16,7 +16,7 @@ searchButton.click(function (event) {
     
     buildQuery();
     createSearchButtons();
-    // alert("back to main trigger " + weatherQuery);
+    // wait for API call to complete before continue
     setTimeout(function () {
         console.log("waiting..... ");
       }, 800);
@@ -27,28 +27,27 @@ searchButton.click(function (event) {
         unixTime = json.list[0].dt;//unix time stamp to convert
         var todayDate = convertUNIX(unixTime);
         // create a box for today weather 
-        today.append(todayBox);
-        //format location and date for today data
-        todayBox.html(json.city.name + " " + todayDate);
-        // add  icon from openweatherAPI
+        today.append(todayBox);        
+        // use zero in the list array as today is always first day
         var todayimageDiv = $("<img>");
-        // use zero in the list array as always first day
         var todayimageLink = "http://openweathermap.org/img/w/" + json.list[0].weather[0].icon + ".png";
         todayimageDiv.attr("src", todayimageLink);
-
+        var todayDatePlace = $("<h2>");
+        
         var todayTempEl = $("<div>");
         var todayWindEl = $("<div>");
         var todayHumEl = $("<div>");
+        todayDatePlace.text(json.city.name + " " + todayDate);
         todayTempEl.text("Temp: " + (json.list[0].main.temp - 273.15).toFixed());
         todayWindEl.text("Wind: " + json.list[0].wind.speed + " KPH");
         todayHumEl.text("Humidity: " + json.list[0].main.humidity + " %");
-        todayBox.append(todayimageDiv, todayTempEl, todayWindEl, todayHumEl);
+        todayBox.append(todayDatePlace, todayimageDiv, todayTempEl, todayWindEl, todayHumEl);
 
         // creating weather element containers
         var fiveDayDiv = $("<div>").addClass("five-day");
         forecastEl.append(fiveDayDiv);
 
-
+        // add 8 each time so that we get one result from each of the 5 days
         for (let i = 0; i < json.list.length; i = i + 8) {
             // create a div for each day
             var dayDiv = $("<div>").addClass("day");

@@ -33,11 +33,19 @@ header {
     border: 1px, black;
 }
 
+#today-box {
+    border: 1px, black;
+}
+
 .five-day {
     display: flex;
     flex-direction: row;
+    align-items: space-around;
 }
 
 .day {
+    background-color: rgb(26, 4, 116);
+    font-weight: bold;
     padding: 1vw;
+    border: 1px, black;
 }
