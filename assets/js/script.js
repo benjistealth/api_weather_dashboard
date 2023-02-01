@@ -4,16 +4,17 @@ var today = $("#today");
 var searchButton = $(".search-button");
 var forecastEl = $("#forecast");
 var historyEl = $("#history");
-var buttonBtn = $("#btn0");
 var API_Key = "4fdb63abdc22d25a9f11e91d3ffc862a"; // my API key
 
-$(".button-box").click(function() {
-    alert("button Click");
-    var buttonText = $( this ).val();
-    console.log(buttonText);
-  });
+// user click event - history button
+historyEl.on("click", "button", function (event) {
+    var buttonText = $(this).text();
+    $("#search-input").val(buttonText);
+    var searchitem = $("#search-input").val();
+    searchButton.trigger("click");
+});
 
-// user click event
+// user click event - search button
 searchButton.click(function (event) {
     event.preventDefault();
     // remove existing weather data if a new search is triggered
@@ -21,9 +22,7 @@ searchButton.click(function (event) {
     $(".today-box").remove();
     $(".today-date").remove();
     buildQuery();
-
     createSearchButtons();
-
     function buildQuery() {
         searchText = recallSave();
         var latLonSearch = "https://api.openweathermap.org/geo/1.0/direct?q=" + searchText + "&limit=1&appid=" + API_Key;
@@ -61,7 +60,6 @@ searchButton.click(function (event) {
         todayDatePlace.append(todayimageDiv);
         todayBox.append(todayTempEl, todayWindEl, todayHumEl);
 
-
         // creating weather element containers
         var fiveDayDiv = $("<div>").addClass("five-day");
         forecastEl.append(fiveDayDiv);
@@ -95,8 +93,6 @@ function convertUNIX(unixTime) {
     const date = moment.unix(unixTime).format("DD/MM/YYYY");
     return date;
 }
-
-
 
 function createSearchButtons() {
     // if there is storage, build buttons from it
@@ -137,7 +133,6 @@ function recallSave() {
             searchBoxText = recalledArr[(recalledArr.length - 1)]; // probably going to be the same thing anyway
             return searchBoxText;
         }
-
     }
     // searchbox was empty so return "london"
     return "london";
