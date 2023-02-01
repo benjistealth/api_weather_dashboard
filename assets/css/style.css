@@ -35,12 +35,16 @@
 
 .five-day {
     display: flex;
-    flex-direction: row;
+    /* flex-direction: row; */
+    /* border: 1px, black;not working */
+    align-items: center;
+    justify-content: space-around;
 }
 
 .day {
+    display: inline-block;
     background-color: rgb(26, 4, 116);
     font-weight: bold;
     padding: 1vw;
-    border: 1px, black;
+    /* border: 1px, black; not working */
 }

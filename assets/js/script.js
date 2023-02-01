@@ -1,6 +1,5 @@
 
 // Grab divs from html
-todayBox = $("<div>").addClass("today-box");
 today = $("#today");
 searchButton = $(".search-button");
 forecastEl = $("#forecast");
@@ -28,6 +27,7 @@ searchButton.click(function (event) {
         unixTime = json.list[0].dt;//unix time stamp to convert
         var todayDate = convertUNIX(unixTime);
         $(".today-box").remove();
+        var todayBox = $("<div>").addClass("today-box");
         // create a box for today weather 
         today.append(todayBox);        
         // use zero in the list array as today is always first day
