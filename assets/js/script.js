@@ -14,16 +14,20 @@ searchButton.click(function (event) {
     $(".five-day").remove();
     $(".today-box").remove();
     buildQuery();
+   
     createSearchButtons();
     // wait for API call to complete before continue
     setTimeout(function () {
         console.log("waiting.....");
-      }, 800);
-    var userWeatherQuery = localStorage.getItem("weatherQuery");
-    console.log(userWeatherQuery);
-    $.getJSON(userWeatherQuery, function (json) {
+        // var userWeatherQuery = localStorage.getItem("weatherQuery");
+        // console.log(userWeatherQuery);
+      }, 1000);
+
+    $.getJSON(localStorage.getItem("weatherQuery"), function (json) {
+        console.log(json.city.name);
         unixTime = json.list[0].dt;//unix time stamp to convert
         var todayDate = convertUNIX(unixTime);
+        $(".today-box").remove();
         // create a box for today weather 
         today.append(todayBox);        
         // use zero in the list array as today is always first day
@@ -77,7 +81,7 @@ function convertUNIX(unixTime) {
 function buildQuery() {
     searchText = recallSave();
     // alert("search_text: " + searchText);
-    var latLonSearch = "http://api.openweathermap.org/geo/1.0/direct?q=" + searchText + "&limit=1&appid=" + API_Key;
+    var latLonSearch = "https://api.openweathermap.org/geo/1.0/direct?q=" + searchText + "&limit=1&appid=" + API_Key;
     // need to handle failed search ideally
         $.getJSON(latLonSearch, function (json) {
             var lat = json[0].lat;
