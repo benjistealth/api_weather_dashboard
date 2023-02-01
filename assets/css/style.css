@@ -17,6 +17,7 @@
 }
 
 .button-box {
+    color: black;
     display: flex;
     flex-direction: column;
     padding: 5vw;
@@ -25,6 +26,7 @@
 }
 
 .btn-secondary {
+    color: black;
     width: 20vw;
     text-align: center;
     border: 1px, black;
@@ -50,21 +52,20 @@
     display: flex;
     flex-direction: row;
     align-items: flex-start;
-    justify-content: end;
+    justify-content: space-around;;
 }
 
 .five-day {
     display: flex;
-    /* flex-direction: row; */
-    /* border: 1px, black;not working */
-    align-items: center;
+}
+
+::after {
     justify-content: space-around;
 }
 
 .day {
-    display: inline-block;
+    display: inline; 
     background-color: #007bff;
     font-weight: bold;
-    padding: 1vw;
-    /* border: 1px, black; not working */
+    padding: 1rem;
 }
