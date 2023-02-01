@@ -32,12 +32,13 @@
 .today {
     display: flex;
     flex-direction: row;
+    align-items: flex-start;
 }
 
 .today-box {
     display: flex;
     flex-direction: column;
-    /* justify-content: space-around; */
+    justify-content: space-around;
 }
 
 .today-box img {

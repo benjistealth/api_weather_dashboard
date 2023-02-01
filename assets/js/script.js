@@ -1,10 +1,17 @@
 
 // Grab divs from html
-today = $("#today");
-searchButton = $(".search-button");
-forecastEl = $("#forecast");
-historyEl = $("#history");
+var today = $("#today");
+var searchButton = $(".search-button");
+var forecastEl = $("#forecast");
+var historyEl = $("#history");
+var buttonBtn = $("#btn0");
 var API_Key = "4fdb63abdc22d25a9f11e91d3ffc862a"; // my API key
+
+$(".button-box").click(function() {
+    alert("button Click");
+    var buttonText = $( this ).val();
+    console.log(buttonText);
+  });
 
 // user click event
 searchButton.click(function (event) {
@@ -60,7 +67,7 @@ searchButton.click(function (event) {
         forecastEl.append(fiveDayDiv);
 
         // add 8 each time so that we get one result from each of the 5 days
-        for (let i = 8; i < json.list.length; i = i + 8) {
+        for (let i = 0; i < json.list.length; i = i + 8) {
             // create a div for each day
             var dayDiv = $("<div>").addClass("day");
             // creating weather data
@@ -134,13 +141,4 @@ function recallSave() {
     }
     // searchbox was empty so return "london"
     return "london";
-}
-
-if ($(".btn-secondary")) {
-    $(".btn-secondary").click(function (event) {
-        event.preventDefault();
-        alert("button Click");
-        var buttonText = $(this).val();
-        console.log(buttonText);
-    });
 }
