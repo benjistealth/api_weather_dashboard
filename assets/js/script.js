@@ -13,17 +13,27 @@ searchButton.click(function (event) {
     $(".five-day").remove();
     $(".today-box").remove();
     buildQuery();
-   
+
     createSearchButtons();
-    // wait for API call to complete before continue
-    setTimeout(function () {
-        console.log("waiting.....");
+    
+    function buildQuery() {
+        searchText = recallSave();
+        console.log("search_text: " + searchText);
+        var latLonSearch = "https://api.openweathermap.org/geo/1.0/direct?q=" + searchText + "&limit=1&appid=" + API_Key;
+        $.getJSON(latLonSearch, parseLocation);
+    }
 
-        var userWeatherQuery = localStorage.getItem("weatherQuery");
-        console.log(userWeatherQuery);
-      }, 1000);
+    function parseLocation(json) {
+        var lat = json[0].lat;
+        var lon = json[0].lon;
+        console.log(lat + " " + lon);
+        // need to handle failed search ideally
+        var weatherQuery = "https://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + lon + "&appid=" + API_Key;
+        $.getJSON(weatherQuery, parseWeather);
+        localStorage.setItem("weatherQuery", weatherQuery);
+    }
 
-    $.getJSON(localStorage.getItem("weatherQuery"), function (json) {
+    var parseWeather = function (json) {
 
         console.log(json.city.name);
 
@@ -32,7 +42,7 @@ searchButton.click(function (event) {
         // $(".today-box").remove();
         var todayBox = $("<div>").addClass("today-box");
         // create a box for today weather 
-        today.append(todayBox);        
+        today.append(todayBox);
         // use zero in the list array as today is always first day
         var todayimageDiv = $("<img>");
         var todayimageLink = "https://openweathermap.org/img/w/" + json.list[0].weather[0].icon + ".png";
@@ -73,28 +83,17 @@ searchButton.click(function (event) {
             fiveDayDiv.append(dayDiv);
             dayDiv.append(date, icon, temp, wind, humidity);
         }
-    });
+    };
+    console.log("end parseWeather");
 })
+console.log("end click event");
 
 function convertUNIX(unixTime) {
     const date = moment.unix(unixTime).format("DD/MM/YYYY");
     return date;
 }
 
-function buildQuery() {
-    searchText = recallSave();
-    console.log("search_text: " + searchText);
-    var latLonSearch = "https://api.openweathermap.org/geo/1.0/direct?q=" + searchText + "&limit=1&appid=" + API_Key;
-        // need to handle failed search ideally
-        $.getJSON(latLonSearch, function (json) {
-            var lat = json[0].lat;
-            var lon = json[0].lon;
-            console.log(lat + " " + lon);
-            // need to handle failed search ideally
-            var weatherQuery = "https://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + lon + "&appid=" + API_Key;
-            localStorage.setItem("weatherQuery", weatherQuery);
-        })
-}
+
 
 function createSearchButtons() {
     // if there is storage, build buttons from it
@@ -122,26 +121,22 @@ function recallSave() {
     // check something is present
     if (searchBoxText) {
         // if searchbox text exists but storage doesnt, create storage
-        if (JSON.parse(localStorage.getItem("searches")) == null) {
+        if (localStorage.getItem("searches") == null) {
             var searchArr = [searchBoxText];
             localStorage.setItem("searches", JSON.stringify(searchArr));
-            // searchBoxText = "london";
-            // alert("recalledArr: " + recalledArr);
             return searchBoxText;
         }
         else {
             // if search text exists and storage exists - add to existing storage
             var recalledArr = JSON.parse(localStorage.getItem("searches"));
             recalledArr.push(searchBoxText);
-            // // alert("recallsave array to store" + recalledArr);
             localStorage.setItem("searches", JSON.stringify(recalledArr));
-            // // alert("recalledArr: " + recalledArr);
             // // set searchbox text to last item
             searchBoxText = recalledArr[(recalledArr.length - 1)]; // probably going to be the same thing anyway
             return searchBoxText;
         }
 
     }
-            // searchbox was empty so return "london"
-            return "london";
+    // searchbox was empty so return "london"
+    return "london";
 }
