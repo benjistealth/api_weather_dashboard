@@ -1,5 +1,6 @@
 * {
     color: black;
+    /* width: 100%; */
 }
 
 #search-button {
@@ -28,10 +29,16 @@
     text-align: center;
     border: 1px, black;
 }
-
 .today {
     display: flex;
     flex-direction: row;
+    align-items: flex-start;
+}
+
+.today-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
 }
 
 .today-box img {
