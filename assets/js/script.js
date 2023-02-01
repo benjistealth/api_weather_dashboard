@@ -52,7 +52,7 @@ searchButton.click(function (event) {
         var todayTempEl = $("<div>");
         var todayWindEl = $("<div>");
         var todayHumEl = $("<div>");
-        todayDatePlace.text(json.city.name + " " + todayDate);
+        todayDatePlace.text(json.city.name + " " + todayDate + "  ");
         todayTempEl.text("Temp: " + (json.list[0].main.temp - 273.15).toFixed());
         todayWindEl.text("Wind: " + json.list[0].wind.speed + " KPH");
         todayHumEl.text("Humidity: " + json.list[0].main.humidity + " %");

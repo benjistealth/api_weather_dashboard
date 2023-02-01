@@ -31,14 +31,19 @@
 }
 .today {
     display: flex;
-    flex-direction: row;
-    align-items: flex-start;
+    flex-direction: column-reverse;
+    /* align-items: flex-end; */
 }
 
 .today-box {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
+}
+
+.today-date {
+    display: flex;
+    flex-direction: row;
 }
 
 .today-box img {
