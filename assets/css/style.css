@@ -29,8 +29,16 @@
     border: 1px, black;
 }
 
-#today-box img {
-    
+.today {
+    display: flex;
+    flex-direction: row;
+}
+
+.today-box img {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: end;
 }
 
 .five-day {
@@ -43,7 +51,7 @@
 
 .day {
     display: inline-block;
-    background-color: rgb(26, 4, 116);
+    background-color: #007bff;
     font-weight: bold;
     padding: 1vw;
     /* border: 1px, black; not working */

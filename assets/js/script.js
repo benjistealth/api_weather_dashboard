@@ -18,15 +18,18 @@ searchButton.click(function (event) {
     // wait for API call to complete before continue
     setTimeout(function () {
         console.log("waiting.....");
-        // var userWeatherQuery = localStorage.getItem("weatherQuery");
-        // console.log(userWeatherQuery);
+
+        var userWeatherQuery = localStorage.getItem("weatherQuery");
+        console.log(userWeatherQuery);
       }, 1000);
 
     $.getJSON(localStorage.getItem("weatherQuery"), function (json) {
+
         console.log(json.city.name);
+
         unixTime = json.list[0].dt;//unix time stamp to convert
         var todayDate = convertUNIX(unixTime);
-        $(".today-box").remove();
+        // $(".today-box").remove();
         var todayBox = $("<div>").addClass("today-box");
         // create a box for today weather 
         today.append(todayBox);        
@@ -80,16 +83,16 @@ function convertUNIX(unixTime) {
 
 function buildQuery() {
     searchText = recallSave();
-    // alert("search_text: " + searchText);
+    console.log("search_text: " + searchText);
     var latLonSearch = "https://api.openweathermap.org/geo/1.0/direct?q=" + searchText + "&limit=1&appid=" + API_Key;
-    // need to handle failed search ideally
+        // need to handle failed search ideally
         $.getJSON(latLonSearch, function (json) {
             var lat = json[0].lat;
             var lon = json[0].lon;
             console.log(lat + " " + lon);
+            // need to handle failed search ideally
             var weatherQuery = "https://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + lon + "&appid=" + API_Key;
             localStorage.setItem("weatherQuery", weatherQuery);
-            // console.log(weatherQuery);
         })
 }
 
@@ -124,20 +127,21 @@ function recallSave() {
             localStorage.setItem("searches", JSON.stringify(searchArr));
             // searchBoxText = "london";
             // alert("recalledArr: " + recalledArr);
+            return searchBoxText;
         }
         else {
             // if search text exists and storage exists - add to existing storage
             var recalledArr = JSON.parse(localStorage.getItem("searches"));
             recalledArr.push(searchBoxText);
-            // alert("recallsave array to store" + recalledArr);
+            // // alert("recallsave array to store" + recalledArr);
             localStorage.setItem("searches", JSON.stringify(recalledArr));
-            // alert("recalledArr: " + recalledArr);
-            // set searchbox text to last item
-            searchBoxText = recalledArr[(recalledArr.length - 1)];
+            // // alert("recalledArr: " + recalledArr);
+            // // set searchbox text to last item
+            searchBoxText = recalledArr[(recalledArr.length - 1)]; // probably going to be the same thing anyway
             return searchBoxText;
         }
-    }
-    searchBoxText = "london";
-    return searchBoxText;
 
+    }
+            // searchbox was empty so return "london"
+            return "london";
 }
