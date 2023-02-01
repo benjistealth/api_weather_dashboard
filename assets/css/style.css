@@ -3,6 +3,10 @@
     /* width: 100%; */
 }
 
+.outer {
+    height: 100% !important;
+}
+
 #search-button {
     color: black;
     font-weight: bold;
@@ -24,6 +28,10 @@
     align-items: center;
     justify-content: space-between;
 }
+
+.btn-secondary:first-letter {
+    text-transform: capitalize;
+ }
 
 .btn-secondary {
     color: black;
