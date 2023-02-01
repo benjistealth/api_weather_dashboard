@@ -12,13 +12,13 @@ searchButton.click(function (event) {
     // remove existing weather data if a new search is triggered
     $(".five-day").remove();
     $(".today-box").remove();
+    $(".today-date").remove();
     buildQuery();
 
     createSearchButtons();
-    
+
     function buildQuery() {
         searchText = recallSave();
-        console.log("search_text: " + searchText);
         var latLonSearch = "https://api.openweathermap.org/geo/1.0/direct?q=" + searchText + "&limit=1&appid=" + API_Key;
         $.getJSON(latLonSearch, parseLocation);
     }
@@ -26,7 +26,6 @@ searchButton.click(function (event) {
     function parseLocation(json) {
         var lat = json[0].lat;
         var lon = json[0].lon;
-        console.log(lat + " " + lon);
         // need to handle failed search ideally
         var weatherQuery = "https://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + lon + "&appid=" + API_Key;
         $.getJSON(weatherQuery, parseWeather);
@@ -34,20 +33,16 @@ searchButton.click(function (event) {
     }
 
     var parseWeather = function (json) {
-
-        console.log(json.city.name);
-
         unixTime = json.list[0].dt;//unix time stamp to convert
         var todayDate = convertUNIX(unixTime);
-        // $(".today-box").remove();
         var todayBox = $("<div>").addClass("today-box");
         // create a box for today weather 
         today.append(todayBox);
         // use zero in the list array as today is always first day
         var todayimageDiv = $("<img>");
         var todayimageLink = "https://openweathermap.org/img/w/" + json.list[0].weather[0].icon + ".png";
-        todayimageDiv.attr("src", todayimageLink);
-        var todayDatePlace = $("<h2>");
+        todayimageDiv.attr("src", todayimageLink).addClass("today-icon");
+        var todayDatePlace = $("<h2>").addClass("today-date");
         var todayTempEl = $("<div>");
         var todayWindEl = $("<div>");
         var todayHumEl = $("<div>");
@@ -55,14 +50,17 @@ searchButton.click(function (event) {
         todayTempEl.text("Temp: " + (json.list[0].main.temp - 273.15).toFixed());
         todayWindEl.text("Wind: " + json.list[0].wind.speed + " KPH");
         todayHumEl.text("Humidity: " + json.list[0].main.humidity + " %");
-        todayBox.append(todayDatePlace, todayimageDiv, todayTempEl, todayWindEl, todayHumEl);
+        today.append(todayDatePlace);
+        todayDatePlace.append(todayimageDiv);
+        todayBox.append(todayTempEl, todayWindEl, todayHumEl);
+
 
         // creating weather element containers
         var fiveDayDiv = $("<div>").addClass("five-day");
         forecastEl.append(fiveDayDiv);
 
         // add 8 each time so that we get one result from each of the 5 days
-        for (let i = 0; i < json.list.length; i = i + 8) {
+        for (let i = 8; i < json.list.length; i = i + 8) {
             // create a div for each day
             var dayDiv = $("<div>").addClass("day");
             // creating weather data
@@ -84,9 +82,7 @@ searchButton.click(function (event) {
             dayDiv.append(date, icon, temp, wind, humidity);
         }
     };
-    console.log("end parseWeather");
 })
-console.log("end click event");
 
 function convertUNIX(unixTime) {
     const date = moment.unix(unixTime).format("DD/MM/YYYY");
@@ -104,7 +100,6 @@ function createSearchButtons() {
         // create a div to store buttons so that they can be removed easily
         var buttonbox = $("<div>").addClass("button-box");
         historyEl.append(buttonbox);
-        // alert("recalled: " + buttonArr);
         for (let i = 0; i < buttonArr.length; i++) {
             var btn = $("<button>").text(buttonArr[i]).addClass("btn button btn-secondary");
             buttonbox.append(btn);
@@ -139,4 +134,13 @@ function recallSave() {
     }
     // searchbox was empty so return "london"
     return "london";
+}
+
+if ($(".btn-secondary")) {
+    $(".btn-secondary").click(function (event) {
+        event.preventDefault();
+        alert("button Click");
+        var buttonText = $(this).val();
+        console.log(buttonText);
+    });
 }
