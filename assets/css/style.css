@@ -67,10 +67,6 @@
     display: flex;
 }
 
-::after {
-    justify-content: space-around;
-}
-
 .day {
     display: inline; 
     background-color: #007bff;

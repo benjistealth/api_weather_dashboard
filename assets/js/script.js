@@ -10,7 +10,6 @@ var API_Key = "4fdb63abdc22d25a9f11e91d3ffc862a"; // my API key
 historyEl.on("click", "button", function (event) {
     var buttonText = $(this).text();
     $("#search-input").val(buttonText);
-    var searchitem = $("#search-input").val();
     searchButton.trigger("click");
 });
 
@@ -125,10 +124,15 @@ function recallSave() {
             return searchBoxText;
         }
         else {
+
             // if search text exists and storage exists - add to existing storage
             var recalledArr = JSON.parse(localStorage.getItem("searches"));
+            // stop duplicate search from adding to storage array
+            console.log(recalledArr);
+            if( $.inArray(searchBoxText, recalledArr) > -1) { return searchBoxText;}
             recalledArr.push(searchBoxText);
             localStorage.setItem("searches", JSON.stringify(recalledArr));
+            console.log(recalledArr);
             // // set searchbox text to last item
             searchBoxText = recalledArr[(recalledArr.length - 1)]; // probably going to be the same thing anyway
             return searchBoxText;
