@@ -51,20 +51,23 @@ searchButton.click(function (event) {
         var todayTempEl = $("<div>");
         var todayWindEl = $("<div>");
         var todayHumEl = $("<div>");
+        var fiveDayHeader = $("<h3>").text("5-Day Forecast:").addClass("five-day-header");
         todayDatePlace.text(json.city.name + " " + todayDate + "  ");
-        todayTempEl.text("Temp: " + (json.list[0].main.temp - 273.15).toFixed());
+        todayTempEl.text("Temp: " + (json.list[0].main.temp - 273.15).toFixed() + " C"); // + "9\xB0" deg symbol makes numbers go crazy
         todayWindEl.text("Wind: " + json.list[0].wind.speed + " KPH");
         todayHumEl.text("Humidity: " + json.list[0].main.humidity + " %");
         today.append(todayDatePlace);
         todayDatePlace.append(todayimageDiv);
-        todayBox.append(todayTempEl, todayWindEl, todayHumEl);
+        todayBox.append(todayTempEl, todayWindEl, todayHumEl, fiveDayHeader);
 
-        // creating weather element containers
+        
+
+        // creating day weather element container
         var fiveDayDiv = $("<div>").addClass("five-day");
         forecastEl.append(fiveDayDiv);
 
         // add 8 each time so that we get one result from each of the 5 days
-        for (let i = 0; i < json.list.length; i = i + 8) {
+        for (let i = 7; i < json.list.length; i = i + 8) {
             // create a div for each day
             var dayDiv = $("<div>").addClass("day");
             // creating weather data
@@ -76,7 +79,8 @@ searchButton.click(function (event) {
             datetext = convertUNIX((json.list[i].dt));
             date.text(datetext);
             var iconurl = "https://openweathermap.org/img/w/" + json.list[i].weather[0].icon + ".png";
-            temp.text("Temp: " + (json.list[i].main.temp - 273.15).toFixed()) + "9\xB0" + "C";
+            temp.text("Temp: " + (json.list[i].main.temp -273.15).toFixed() + " C"); // + "9\xB0"
+            // console.log(json.list[i].main.temp -273.15);
             wind.text("Wind: " + json.list[i].wind.speed + " KPH");
             humidity.text("Humidity: " + json.list[i].main.humidity + " %");
             icon.attr("src", iconurl);
@@ -128,7 +132,8 @@ function recallSave() {
             // if search text exists and storage exists - add to existing storage
             var recalledArr = JSON.parse(localStorage.getItem("searches"));
             // stop duplicate search from adding to storage array
-            if( $.inArray(searchBoxText, recalledArr) > -1) { return searchBoxText;}
+            // if( $.inArray(searchBoxText, recalledArr) > -1) { return searchBoxText;} //works
+            if(recalledArr.includes(searchBoxText)) {return searchBoxText;} //works
             recalledArr.push(searchBoxText);
             localStorage.setItem("searches", JSON.stringify(recalledArr));
             // set searchbox text to last item
