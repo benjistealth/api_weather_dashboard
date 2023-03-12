@@ -54,6 +54,7 @@
     flex-direction: column-reverse;
     border: 1px, black;
     /* align-items: flex-end; */
+    
 }
 
 .today-box {
@@ -77,13 +78,29 @@
 .five-day {
     display: flex;
     justify-content: space-between;
+    gap: 2rem;
 }
 
 .day {
+    /* display: flex; */
+    height: 17rem;
+    gap: 1;
     margin-right: 80px;
     /* display: inline;  */
     background-color: #007bff;
     font-weight: bold;
     padding: 1rem;
     border-radius: 5px;    
+    margin-left: 3rem;
 }
+
+@media only screen and (max-width: 1000px) {
+    .five-day {
+      flex-direction: column;
+    }
+    .day {
+      flex-direction: column;
+      max-width: 10rem;
+      margin-bottom: 1rem;
+    }
+  }

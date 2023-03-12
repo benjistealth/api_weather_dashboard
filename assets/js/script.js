@@ -63,13 +63,13 @@ searchButton.click(function (event) {
         
 
         // creating day weather element container
-        var fiveDayDiv = $("<div>").addClass("five-day");
+        var fiveDayDiv = $("<div>").addClass("five-day container");
         forecastEl.append(fiveDayDiv);
 
         // add 8 each time so that we get one result from each of the 5 days
         for (let i = 7; i < json.list.length; i = i + 8) {
             // create a div for each day
-            var dayDiv = $("<div>").addClass("day");
+            var dayDiv = $("<div>").addClass("day container");
             // creating weather data
             var date = $("<div>");
             var icon = $("<img>");
